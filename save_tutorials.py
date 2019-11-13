@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-11-13 17:56:12
+@LastEditTime: 2019-11-13 18:33:16
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -43,4 +43,6 @@ write_data_to_excel = WriteDataToExcel(tutorial_output_path)
 write_data_to_excel.write_sheets(datas)
 for sheetname in datas:
     write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$D1="well_done"')
+    write_data_to_excel.write_cell(sheetname, "J1", 'is_check')
+    write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$J1=1', bg_color='#00b8ff')
 write_data_to_excel.close()
