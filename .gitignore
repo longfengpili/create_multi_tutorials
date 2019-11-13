@@ -1,0 +1,14 @@
+
+.pyc
+.vscode/
+__pycache__/
+.ipynb_checkpoints/
+
+
+logs/
+sql/
+*.xlsx
+*.ipynb
+
+
+mysetting.py
