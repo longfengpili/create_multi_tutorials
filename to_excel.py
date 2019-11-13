@@ -143,15 +143,17 @@ class WriteDataToExcel(object):
 				data = datas.get(sheetname)[1:]
 				self.write_sheet(sheetname, header, data, cellformat)
 
-	def set_sheet_formula_conditional(self, sheetname, rangecell, criteria):
+	def set_sheet_formula_conditional(self, sheetname, rangecell, criteria, bg_color=None):
 		'''
 		条件格式
 		:param sheetname: sheet名称
 		:param rangecell: 单元格范围，例如'A1:D7'
 		:param criteria: 公式， 例如'=$f1="well"'
+		:param bg_color: 颜色
 		'''
 		sheet = self.get_sheet(sheetname)
-		wb_format = self.wb.add_format({'bg_color': '#FFC7CE'})
+		bg_color = bg_color if bg_color else '#ffb728'
+		wb_format = self.wb.add_format({'bg_color': bg_color})
 		sheet.conditional_format(rangecell.upper(), {
 	        'type': 'formula',
 	        'criteria': criteria,

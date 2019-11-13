@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-11-13 16:50:54
+@LastEditTime: 2019-11-13 17:42:45
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -94,14 +94,15 @@ class ParseTutorial(object):
                 tutorial['step_name'] = tutorial['step_name_ori'] + '_s'
 
                 if level:
-                    tutorial['level'] = level + 0.3
+                    tutorial['level_step'] = level + 0.3
                 elif 'selectBooster' in tutorial_file: #关前道具没有配置关卡号
                     t_ = tutorial['step_name_ori'].split('_learning')[0]
                     level = especial_data.get(t_.lower(), 0) + 0.1
-                    tutorial['level'] = level
+                    tutorial['level_step'] = level
                 else:
                     # print(f"【{tutorial_file}({level})】{tutorial['step_name']}")
-                    tutorial['level'] = -10000
+                    tutorial['level_step'] = -10000
+                tutorial['level'] = int(tutorial['level_step'])
 
                 if soup_.dialog:
                     tutorial['step_text'] = soup_.dialog.get('text', '')
@@ -116,7 +117,7 @@ class ParseTutorial(object):
                 end['step_name'] = end.get('step_name').replace('_s', '_e')
                 end['step_des'] = end['step_des'] + '结束_temp'
                 file_tutorial.append(end)
-        return int(tutorial['level']), file_tutorial
+        return tutorial['level'], file_tutorial
 
     def get_tutorial_info_multiple(self, tutorial_files, especial_data):
         levels = []
@@ -145,14 +146,15 @@ class ParseTutorial(object):
                 tutorial['step_name_ori'] = k.split('.')[0]
                 tutorial['step_des'] = ''
                 tutorial['step_name'] = k.split('.')[0]
-                tutorial['level'] = float(level)
+                tutorial['level_step'] = float(level)
+                tutorial['level'] = int(tutorial['level_step'])
                 tutorial['step_text'] = ''
                 story_tutorials.append(tutorial)
         return story_tutorials
 
     def get_levelstep_tutorial_info(self, levels, max_level=100):
         levels = set(list(range(max_level+1)) + levels)
-        levels = [level for level in levels if level >= 0]
+        levels = [level for level in levels if level > 0]
         level_steps = {'enter_level': 0.0, 'start_level': 0.2,
                     'level_completed': 0.4, 'well_done': 0.5}
         levelstep_tutorials = []
@@ -165,7 +167,8 @@ class ParseTutorial(object):
                 tutorial['step_name_ori'] = step
                 tutorial['step_des'] = ''
                 tutorial['step_name'] = step
-                tutorial['level'] = lv + level_steps[step]
+                tutorial['level_step'] = lv + level_steps[step]
+                tutorial['level'] = int(tutorial['level_step'])
                 tutorial['step_text'] = ''
                 levelstep_tutorials.append(tutorial)
 
@@ -180,7 +183,7 @@ class ParseTutorial(object):
         tutorials.extend(config_tutorials)
         tutorials.extend(story_tutorials)
         tutorials.extend(levelstep_tutorials)
-        tutorials = sorted(tutorials, key=lambda x: (x.get('level'), x.get('step')))
+        tutorials = sorted(tutorials, key=lambda x: (x.get('level_step'), x.get('step')))
         return tutorials
 
 if __name__ == "__main__":
