@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-14 18:24:59
-@LastEditTime: 2019-11-14 18:31:02
+@LastEditTime: 2019-11-14 18:46:15
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -10,6 +10,7 @@
 
 from mysetting import *
 from parse_tutorial import ParseTutorial
+import pytest
 
 def test_parse():
     pt = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_especial_path)
