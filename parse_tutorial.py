@@ -15,6 +15,25 @@ import re
 from to_excel import WriteDataToExcel
 
 class ParseTutorial(object):
+    '''[summary]
+    
+    [description]
+        1. level_step 设定，为了排序
+            + enter_level 1.0
+            + 关前道具 1.1
+            + start_level 1.2
+            + 关内引导 1.3
+            + level_completed 1.4
+            + well_done 1.5
+            + 关后剧情 
+        2. especial文档
+            + level_tutorials 只是为了获取关前道具关卡
+            + story_tutorials 是需要加入的其他关卡外漏斗（具体序号需要符合第一部分）
+    Variables:
+        tutorial_path {str} -- 文件地址
+        tutorial_map {dict} -- 文件分类与especial中对应的列名
+        tutorial_especial_path ｛str｝-- especial文件地址
+    '''
     
     def __init__(self, tutorial_path, tutorial_map, tutorial_especial_path):
         self.tutorial_path = tutorial_path
@@ -26,14 +45,23 @@ class ParseTutorial(object):
         @description: 获取tutorial文件并分组
         '''
         mul_tutorial_files = {}
+        non_level_files = []
         for file in os.listdir(self.tutorial_path):
             file = self.tutorial_path + f"/{file}"
             if '.meta' not in file and '_a' not in file:
-                tutorial_name = file.split('_')[-1]
-                tutorial_name = tutorial_name if re.search('_AB\d+.xml', file) else 'AB0.xml'
-                tutorial_name = self.tutorial_map.get(tutorial_name)
-                mul_tutorial_files.setdefault(tutorial_name, [])
-                mul_tutorial_files.get(tutorial_name).append(file)
+                if 'level' not in file:
+                    non_level_files.append(file)
+                else:
+                    filename = re.sub('\(.*?\)', '', file, 1)
+                    tutorial_name = filename.split('_')[-1]
+                    tutorial_name = tutorial_name if re.search('_AB\d+.xml', filename) else 'AB0.xml'
+                    tutorial_name = self.tutorial_map.get(tutorial_name)
+                    mul_tutorial_files.setdefault(tutorial_name, [])
+                    mul_tutorial_files.get(tutorial_name).append(file)
+
+        for tutorial_name in mul_tutorial_files:
+            mul_tutorial_files.get(tutorial_name).extend(non_level_files)
+        # print(mul_tutorial_files)
         return mul_tutorial_files
 
     def get_especial_info(self, tutorial_name):
@@ -92,6 +120,7 @@ class ParseTutorial(object):
                 tutorial['step_name_ori'] = soup_.get('step_name', '')
                 tutorial['step_des'] = soup_.get('step_des', '')
                 tutorial['step_name'] = tutorial['step_name_ori'] + '_s'
+                tutorial['level'] = None #占位
 
                 if level:
                     tutorial['level_step'] = level + 0.3
@@ -146,6 +175,7 @@ class ParseTutorial(object):
                 tutorial['step_name_ori'] = k.split('.')[0]
                 tutorial['step_des'] = ''
                 tutorial['step_name'] = k.split('.')[0]
+                tutorial['level'] = None #占位
                 tutorial['level_step'] = float(level)
                 tutorial['level'] = int(tutorial['level_step'])
                 tutorial['step_text'] = ''
@@ -167,6 +197,7 @@ class ParseTutorial(object):
                 tutorial['step_name_ori'] = step
                 tutorial['step_des'] = ''
                 tutorial['step_name'] = step
+                tutorial['level'] = None #占位
                 tutorial['level_step'] = lv + level_steps[step]
                 tutorial['level'] = int(tutorial['level_step'])
                 tutorial['step_text'] = ''

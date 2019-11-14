@@ -10,6 +10,7 @@
 from mysetting import *
 from to_excel import WriteDataToExcel
 from parse_tutorial import ParseTutorial
+import os
 
 
 parse_tutorial = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_especial_path)
@@ -26,8 +27,10 @@ for tutorial_name, tutorial_files in mul_tutorial_files.items():
     values.insert(0, title)
     datas[tutorial_name] = values
     #解析不需要处理的数据
-    other_tutorial_values = [list(tutorial.values()) for tutorial in tutorials if tutorial.get('level') < 0]
-    other_tutorial_values_multi.extend(other_tutorial_values)
+    for tutorial in tutorials:
+        values = list(tutorial.values())
+        if tutorial.get('level') < 0 and values not in other_tutorial_values_multi:
+            other_tutorial_values_multi.append(values)
     #解析adjust数据
     adjust_key = set([tutorial.get('step_name') for tutorial in tutorials if tutorial.get('level') >= 0])
     adjust_keys.update(adjust_key)
@@ -46,3 +49,6 @@ for sheetname in datas:
     write_data_to_excel.write_cell(sheetname, "J1", 'is_check')
     write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$J1=1', bg_color='#00b8ff')
 write_data_to_excel.close()
+
+tutorial_output_path = tutorial_output_path.replace("/", "\\")
+os.system(f'explorer {tutorial_output_path}')
