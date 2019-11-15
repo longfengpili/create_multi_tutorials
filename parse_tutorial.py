@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-11-13 17:42:45
+@LastEditTime: 2019-11-15 14:37:25
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -32,13 +32,13 @@ class ParseTutorial(object):
     Variables:
         tutorial_path {str} -- 文件地址
         tutorial_map {dict} -- 文件分类与especial中对应的列名
-        tutorial_especial_path ｛str｝-- especial文件地址
+        tutorial_config_path ｛str｝-- tutorial_config_path文件地址
     '''
     
-    def __init__(self, tutorial_path, tutorial_map, tutorial_especial_path):
+    def __init__(self, tutorial_path, tutorial_map, tutorial_config_path):
         self.tutorial_path = tutorial_path
         self.tutorial_map = tutorial_map
-        self.tutorial_especial_path = tutorial_especial_path
+        self.tutorial_config_path = tutorial_config_path
 
     def get_tutorial_files(self):
         '''
@@ -64,19 +64,19 @@ class ParseTutorial(object):
         # print(mul_tutorial_files)
         return mul_tutorial_files
 
-    def get_especial_info(self, tutorial_name):
+    def get_tutorial_level_info(self, tutorial_name):
         '''
         @description: 根据tutorial_name获取especial中的内容
         @param {type} 
         【tutorial_name {str}】：对应ab组的name
         @return: 
-        【especial_data {dict}】：返回对应的各项道具、各种非关卡内引导的数据
+        【tutorial_levels {dict}】：返回对应的各项道具、各种非关卡内引导的数据
         '''
-        tutorial_names = [tutorial_name, 'all']
-        with xlrd.open_workbook(self.tutorial_especial_path) as wb:
+        tutorial_names = [tutorial_name, 'all'] # 'all'是公共部分的对应数据
+        with xlrd.open_workbook(self.tutorial_config_path) as wb:
             sheets_name = wb.sheet_names()
-        especial_data = {}
-        especial_data_temp = {}
+        tutorial_levels = {}
+        tutorial_levels_temp = {}
         for sheet_name in sheets_name:
             sheet = wb.sheet_by_name(sheet_name)
             col_level = sheet.col_values(0) #获取level列
@@ -85,20 +85,34 @@ class ParseTutorial(object):
                 if tutorial_name in sheet_columns:
                     col_values = sheet.col_values(sheet_columns.index(tutorial_name)) #获取对应的列的数据
                     temp = dict(zip(col_values[1:], col_level[1:]))
-                    especial_data_temp.update(temp)
-        especial_data_temp.pop('')
+                    tutorial_levels_temp.update(temp)
+        tutorial_levels_temp.pop('')
         
-        for k, v in especial_data_temp.items(): #key中的大写全部转成小写
+        for k, v in tutorial_levels_temp.items(): #key中的大写全部转成小写
             k = k.lower() if isinstance(k, str) else f'{int(k)}' if isinstance(k, int) or isinstance(k, float) else k
-            especial_data[k] = v
-        return especial_data
+            tutorial_levels[k] = v
+        return tutorial_levels
 
-    def get_tutorial_info_single(self, tutorial_file, especial_data):
+    def get_tutorial_adjust_token(self, adjust_sheet='adjust_funnel'):
+        tutorial_adjust_id = {}
+        with xlrd.open_workbook(self.tutorial_config_path) as wb:
+            tutorial_adjust_sheet = wb.sheet_by_name(adjust_sheet)
+        for row in range(tutorial_adjust_sheet.nrows):
+            values = tutorial_adjust_sheet.row_values(row)
+            if values and values[0] == 'new_user_funnel':
+                key_ = values[1]
+                key_ = key_.lower() if isinstance(key_, str) else f'{int(key_)}' if isinstance(key_, int) or isinstance(key_, float) else key_
+                value_ = values[2]
+                tutorial_adjust_id[key_] = value_
+        return tutorial_adjust_id
+        
+
+    def get_tutorial_info_single(self, tutorial_file, tutorial_levels):
         '''
         @description: 获取单个文件的漏斗信息
         @param {type} 
         【tutorial_file {str}】：文件路径
-        【especial_data {dict}】：特别配置的信息
+        【tutorial_levels {dict}】：特别配置的信息
         @return: 
         【level {int}】：关卡号
         【file_tutorial {list}】：多步漏斗数据，每步是一个字典
@@ -126,7 +140,7 @@ class ParseTutorial(object):
                     tutorial['level_step'] = level + 0.3
                 elif 'selectBooster' in tutorial_file: #关前道具没有配置关卡号
                     t_ = tutorial['step_name_ori'].split('_learning')[0]
-                    level = especial_data.get(t_.lower(), 0) + 0.1
+                    level = tutorial_levels.get(t_.lower(), 0) + 0.1
                     tutorial['level_step'] = level
                 else:
                     # print(f"【{tutorial_file}({level})】{tutorial['step_name']}")
@@ -148,24 +162,24 @@ class ParseTutorial(object):
                 file_tutorial.append(end)
         return tutorial['level'], file_tutorial
 
-    def get_tutorial_info_multiple(self, tutorial_files, especial_data):
+    def get_tutorial_info_multiple(self, tutorial_files, tutorial_levels):
         levels = []
-        config_tutorials = []
+        inlevel_tutorials = []
         for tutorial_file in tutorial_files:
-            level, file_tutorial = self.get_tutorial_info_single(tutorial_file, especial_data)
+            level, file_tutorial = self.get_tutorial_info_single(tutorial_file, tutorial_levels)
             levels.append(level)
-            config_tutorials.extend(file_tutorial)
+            inlevel_tutorials.extend(file_tutorial)
     
-        return levels, config_tutorials
+        return levels, inlevel_tutorials
     
-    def get_story_tutorial_info(self, especial_data):
+    def get_story_tutorial_info(self, tutorial_levels):
         '''
         @description: 生成关卡外剧情的漏斗数据
         @param {type} 
         @return: 
         '''
         story_tutorials = []
-        for k, v in especial_data.items():
+        for k, v in tutorial_levels.items():
             if isinstance(v, str):
                 level, step = v.split('-', 1)
                 tutorial = {}
@@ -207,18 +221,18 @@ class ParseTutorial(object):
 
     def get_tutorials(self, tutorial_name, tutorial_files):
         tutorials = []
-        especial_data = self.get_especial_info(tutorial_name)
-        levels, config_tutorials = self.get_tutorial_info_multiple(tutorial_files, especial_data)
-        story_tutorials = self.get_story_tutorial_info(especial_data)
+        tutorial_levels = self.get_tutorial_level_info(tutorial_name)
+        levels, inlevel_tutorials = self.get_tutorial_info_multiple(tutorial_files, tutorial_levels)
+        story_tutorials = self.get_story_tutorial_info(tutorial_levels)
         levelstep_tutorials = self.get_levelstep_tutorial_info(levels)
-        tutorials.extend(config_tutorials)
+        tutorials.extend(inlevel_tutorials)
         tutorials.extend(story_tutorials)
         tutorials.extend(levelstep_tutorials)
         tutorials = sorted(tutorials, key=lambda x: (x.get('level_step'), x.get('step')))
         return tutorials
 
 if __name__ == "__main__":
-    pt = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_especial_path)
+    pt = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
     mul_tutorial_files = pt.get_tutorial_files()
     # print(mul_tutorial_files)
     for tutorial_name, tutorial_files in mul_tutorial_files.items():

@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-11-15 12:44:30
+@LastEditTime: 2019-11-15 14:23:24
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -15,8 +15,8 @@ from windows import File
 import time
 
 
-def get_datas(project_tutorial_path, tutorial_map, tutorial_especial_path):
-    parse_tutorial = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_especial_path)
+def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
+    parse_tutorial = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
     mul_tutorial_files = parse_tutorial.get_tutorial_files()
 
     datas = {}
@@ -59,6 +59,6 @@ if __name__ == '__main__':
     file = File(tutorial_output_path)
     file.close_file()
     time.sleep(2)
-    datas = get_datas(project_tutorial_path, tutorial_map, tutorial_especial_path)
+    datas = get_datas(project_tutorial_path, tutorial_map, tutorial_config_path)
     write_data_to_excel(tutorial_output_path, datas)
     file.open_file()
