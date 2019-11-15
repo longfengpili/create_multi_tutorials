@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-11-15 14:23:24
+@LastEditTime: 2019-11-15 15:14:31
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -20,7 +20,7 @@ def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
     mul_tutorial_files = parse_tutorial.get_tutorial_files()
 
     datas = {}
-    adjust_keys = set()
+    adjust_tokes = []
     other_tutorial_values_multi = []
     for tutorial_name, tutorial_files in mul_tutorial_files.items():
         tutorials = parse_tutorial.get_tutorials(tutorial_name, tutorial_files)
@@ -32,17 +32,21 @@ def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
         #解析不需要处理的数据
         for tutorial in tutorials:
             values = list(tutorial.values())
+            adjust_values = [tutorial.get('step_name'), tutorial.get('adjust_token')]
             if tutorial.get('level') < 0 and values not in other_tutorial_values_multi:
                 other_tutorial_values_multi.append(values)
-        #解析adjust数据
-        adjust_key = set([tutorial.get('step_name') for tutorial in tutorials if tutorial.get('level') >= 0])
-        adjust_keys.update(adjust_key)
+            elif tutorial.get('level') >= 0 and adjust_values not in adjust_tokes:
+                adjust_tokes.append(adjust_values)
 
-    other_tutorial_values_multi = sorted(other_tutorial_values_multi, key=lambda x: (x[0], x[2]))
-    # print(other_tutorial_values_multi)
+    # sorted other_tutorial_values_multi
+    other_tutorial_values_multi = sorted(other_tutorial_values_multi, key=lambda x: (x[0], x[2])) #sorted
     other_tutorial_values_multi.insert(0, title)
     datas['other_tutorial'] = other_tutorial_values_multi
-    datas['adjust_key'] = list(zip(sorted(adjust_keys)))
+
+    # sorted adjust_tokes
+    adjust_tokes = sorted(adjust_tokes, key=lambda x: x[0])
+    adjust_tokes.insert(0, ['step_name', 'adjust_token'])
+    datas['adjust_tokes'] = adjust_tokes
     return datas
 
 def write_data_to_excel(tutorial_output_path, datas):

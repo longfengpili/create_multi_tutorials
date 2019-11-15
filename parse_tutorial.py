@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-11-15 14:37:25
+@LastEditTime: 2019-11-15 14:48:37
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -105,7 +105,6 @@ class ParseTutorial(object):
                 value_ = values[2]
                 tutorial_adjust_id[key_] = value_
         return tutorial_adjust_id
-        
 
     def get_tutorial_info_single(self, tutorial_file, tutorial_levels):
         '''
@@ -133,6 +132,7 @@ class ParseTutorial(object):
                 tutorial['step'] = int(soup_.get('move', 0))
                 tutorial['step_name_ori'] = soup_.get('step_name', '')
                 tutorial['step_des'] = soup_.get('step_des', '')
+                tutorial['adjust_token'] = None  # 占位
                 tutorial['step_name'] = tutorial['step_name_ori'] + '_s'
                 tutorial['level'] = None #占位
 
@@ -188,6 +188,7 @@ class ParseTutorial(object):
                 tutorial['step'] = int(step)
                 tutorial['step_name_ori'] = k.split('.')[0]
                 tutorial['step_des'] = ''
+                tutorial['adjust_token'] = None  # 占位
                 tutorial['step_name'] = k.split('.')[0]
                 tutorial['level'] = None #占位
                 tutorial['level_step'] = float(level)
@@ -210,6 +211,7 @@ class ParseTutorial(object):
                 tutorial['step'] = 0
                 tutorial['step_name_ori'] = step
                 tutorial['step_des'] = ''
+                tutorial['adjust_token'] = None  # 占位
                 tutorial['step_name'] = step
                 tutorial['level'] = None #占位
                 tutorial['level_step'] = lv + level_steps[step]
@@ -220,14 +222,23 @@ class ParseTutorial(object):
         return levelstep_tutorials
 
     def get_tutorials(self, tutorial_name, tutorial_files):
+        tutorials_t = []
         tutorials = []
         tutorial_levels = self.get_tutorial_level_info(tutorial_name)
         levels, inlevel_tutorials = self.get_tutorial_info_multiple(tutorial_files, tutorial_levels)
         story_tutorials = self.get_story_tutorial_info(tutorial_levels)
         levelstep_tutorials = self.get_levelstep_tutorial_info(levels)
-        tutorials.extend(inlevel_tutorials)
-        tutorials.extend(story_tutorials)
-        tutorials.extend(levelstep_tutorials)
+        tutorials_t.extend(inlevel_tutorials)
+        tutorials_t.extend(story_tutorials)
+        tutorials_t.extend(levelstep_tutorials)
+        
+        tutorials_token = self.get_tutorial_adjust_token(adjust_sheet='adjust_funnel')
+        for tutorial in tutorials_t:
+            step_name = tutorial.get('step_name', '')
+            step_token = tutorials_token.get(step_name)
+            tutorial['adjust_token'] = step_token
+            tutorials.append(tutorial)
+
         tutorials = sorted(tutorials, key=lambda x: (x.get('level_step'), x.get('step')))
         return tutorials
 
