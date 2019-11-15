@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-11-15 16:36:37
+@LastEditTime: 2019-11-15 16:46:17
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -11,7 +11,7 @@ from mysetting import *
 from to_excel import WriteDataToExcel
 from parse_tutorial import ParseTutorial
 import os
-from windows import File
+from file import File
 import time
 
 

@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-14 18:24:59
-@LastEditTime: 2019-11-15 14:28:17
+@LastEditTime: 2019-11-15 16:45:43
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -11,7 +11,7 @@
 from mysetting import *
 from parse_tutorial import ParseTutorial
 import pytest
-from windows import File
+from file import File
 import time
 
 # @pytest.mark.skip()
