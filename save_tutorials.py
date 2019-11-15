@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-11-15 15:14:31
+@LastEditTime: 2019-11-15 16:36:37
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -32,7 +32,7 @@ def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
         #解析不需要处理的数据
         for tutorial in tutorials:
             values = list(tutorial.values())
-            adjust_values = [tutorial.get('step_name'), tutorial.get('adjust_token')]
+            adjust_values = [tutorial.get('step_name', ''), tutorial.get('adjust_token', '')]
             if tutorial.get('level') < 0 and values not in other_tutorial_values_multi:
                 other_tutorial_values_multi.append(values)
             elif tutorial.get('level') >= 0 and adjust_values not in adjust_tokes:
