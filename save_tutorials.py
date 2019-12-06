@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-11-15 16:46:17
+@LastEditTime: 2019-12-06 10:36:34
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -13,6 +13,7 @@ from parse_tutorial import ParseTutorial
 import os
 from file import File
 import time
+from datetime import datetime
 
 
 def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
@@ -60,6 +61,8 @@ def write_data_to_excel(tutorial_output_path, datas):
 
 
 if __name__ == '__main__':
+    filename = datetime.now().strftime('%Y%m%d')
+    tutorial_output_path = os.path.join(tutorial_output_path, f'{filename}tutorial.xlsx')
     file = File(tutorial_output_path)
     file.close_file()
     time.sleep(2)
