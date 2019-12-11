@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-12-11 10:06:01
+@LastEditTime: 2019-12-11 10:51:27
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -48,7 +48,7 @@ class ParseTutorial(object):
         non_level_files = []
         for file in os.listdir(self.tutorial_path):
             file = self.tutorial_path + f"/{file}"
-            if '.meta' not in file and '_a' not in file:
+            if '.meta' not in file and '_a' not in file and '_R1' not in file:
                 if 'level' not in file:
                     non_level_files.append(file)
                 else:
