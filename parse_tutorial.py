@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-12-11 17:37:55
+@LastEditTime: 2019-12-11 18:08:30
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -62,7 +62,7 @@ class ParseTutorial(object):
                     file = file[0]
                     mul_tutorial_files.setdefault(tutorial_name, [])
                     mul_tutorial_files.get(tutorial_name).append(file)
-                # print(xml, elem, level, file)
+                print(xml, elem, level, file)
         for file in all_files:
             if '.meta' not in file and '_a' not in file and '_R1' not in file:
                 if 'level' not in file:
@@ -95,8 +95,13 @@ class ParseTutorial(object):
             for tutorial_name in tutorial_names:
                 if tutorial_name in sheet_columns:
                     col_values = sheet.col_values(sheet_columns.index(tutorial_name)) #获取对应的列的数据
-                    temp = dict(zip(col_values[1:], col_level[1:]))
-                    tutorial_levels_temp.update(temp)
+                    elem_counts = [col_values.count(elem) for elem in set(col_values) if elem]
+                    if max(elem_counts) >= 2: #检查是否有重复的
+                        elems = [elem for elem in set(col_values) if col_values.count(elem) >= 2]
+                        raise ValueError(f"mutiple elem {','.join(elems)}")
+                    else:
+                        temp = dict(zip(col_values[1:], col_level[1:]))
+                        tutorial_levels_temp.update(temp)
         tutorial_levels_temp.pop('')
         
         for k, v in tutorial_levels_temp.items(): #key中的大写全部转成小写
