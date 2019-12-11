@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-11-15 16:38:55
+@LastEditTime: 2019-12-11 10:06:01
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -75,6 +75,7 @@ class ParseTutorial(object):
         tutorial_names = [tutorial_name, 'all'] # 'all'是公共部分的对应数据
         with xlrd.open_workbook(self.tutorial_config_path) as wb:
             sheets_name = wb.sheet_names()
+        sheets_name = [sheet_name for sheet_name in sheets_name if not sheet_name.startswith('_')]
         tutorial_levels = {}
         tutorial_levels_temp = {}
         for sheet_name in sheets_name:
