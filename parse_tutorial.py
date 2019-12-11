@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-12-11 17:17:10
+@LastEditTime: 2019-12-11 17:37:55
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -52,18 +52,17 @@ class ParseTutorial(object):
             tutorial_levels = self.get_tutorial_level_info(tutorial_name)
             tutorial_levels = dict([(k, v) for k, v in tutorial_levels.items() if not isinstance(v, str)])
             for elem, level in tutorial_levels.items():
-                # print(xml, elem, level)
                 if xml == 'AB0.xml':
                     file = [file for file in all_files if file.endswith('.xml') and f'level{int(level)}' in file and 'AB' not in file]
                 else:
-                    file1 = [file for file in all_files if file.endswith('.xml') and f'level{int(level)}' in file and xml in file]
+                    file1 = [file for file in all_files if file.endswith('.xml') and re.search(f'level{int(level)}(?!\d)', file) and xml in file]
                     file2 = [file for file in all_files if file.endswith('.xml') and f'level{int(level)}' in file]
                     file = file1 if file1 else file2 if file2 else []
                 if file:
                     file = file[0]
                     mul_tutorial_files.setdefault(tutorial_name, [])
                     mul_tutorial_files.get(tutorial_name).append(file)
-        
+                # print(xml, elem, level, file)
         for file in all_files:
             if '.meta' not in file and '_a' not in file and '_R1' not in file:
                 if 'level' not in file:
@@ -129,11 +128,10 @@ class ParseTutorial(object):
         【file_tutorial {list}】：多步漏斗数据，每步是一个字典
         '''
         file_tutorial = []
-        tutorial_file = os.path.join(self.tutorial_path, tutorial_file)
-        with open(tutorial_file, 'r', encoding='utf-8') as f:
+        tutorial_file_path = os.path.join(self.tutorial_path, tutorial_file)
+        with open(tutorial_file_path, 'r', encoding='utf-8') as f:
             html = f.read()
             soup = BeautifulSoup(html, 'lxml')
-            tutorial_file = tutorial_file.split('/')[-1]
             if soup.pbtutorial:
                 id = soup.pbtutorial.get('id')
                 result = re.search('(?<=level)(\d+)', id)
