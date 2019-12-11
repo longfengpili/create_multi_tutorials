@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-12-06 10:36:34
+@LastEditTime: 2019-12-11 15:42:25
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -38,6 +38,15 @@ def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
                 other_tutorial_values_multi.append(values)
             elif tutorial.get('level') >= 0 and adjust_values not in adjust_tokes:
                 adjust_tokes.append(adjust_values)
+    
+    # 根据最大的tutorial补其组的数据
+    tutorial_len = sorted([(k, v[-1][6]) for k, v in datas.items()], key=lambda x: x[1])
+    tutorial_base_name = tutorial_len[-1][0]
+    for other_tutorial in tutorial_len[:-1]:
+        other_tutorial_name, max_level = other_tutorial
+        tutorial_other_need_add = [row for row in datas.get(tutorial_base_name) if row[6] != 'level' and int(row[6]) > int(max_level)]
+        datas[other_tutorial_name].extend(tutorial_other_need_add)
+    # print(sorted([(k, v[-1][6]) for k, v in datas.items()], key=lambda x: x[1]))
 
     # sorted other_tutorial_values_multi
     other_tutorial_values_multi = sorted(other_tutorial_values_multi, key=lambda x: (x[0], x[2])) #sorted
