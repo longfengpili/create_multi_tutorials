@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-12-12 11:03:01
-@LastEditTime: 2019-12-12 15:31:53
+@LastEditTime: 2019-12-12 15:42:56
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -46,7 +46,7 @@ class StoryTutorial(object):
             data = [id, self.game_version] + data + ['start']
             story_funnel.append(data)
         funnel_datas['story_funnel'] = story_funnel
-        funnel_datas['quest_funnel'] = [step for ix, step in enumerate(story_funnel) if step[2] == step[3] or ix == 0]
+        # funnel_datas['quest_funnel'] = [step for ix, step in enumerate(story_funnel) if step[2] == step[3] or ix == 0]
         return funnel_datas
 
 
