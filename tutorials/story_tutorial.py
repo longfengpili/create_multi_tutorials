@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-12-12 11:03:01
-@LastEditTime: 2019-12-12 12:35:45
+@LastEditTime: 2019-12-12 14:19:19
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -28,14 +28,18 @@ class StoryTutorial(object):
         id = 0
         current_questid = None
         story_funnel = []
-        for data in datas:
-            dialogid, questid, bi = data
+        for ix, data in enumerate(datas):
+            _, questid, bi = data
             if questid != 0 and questid != current_questid:
+                if current_questid:
+                    id += 1
+                    story_funnel.append([id, current_questid, current_questid, datas[ix-1][2], 'end']) #结束上一个
                 current_questid = questid
                 id += 1
-                story_funnel.append([id, questid, questid, bi])
+                story_funnel.append([id, current_questid, current_questid, bi, 'start']) #开始下一个
             id += 1
             data.insert(0, id)
+            data.append('start')
             story_funnel.append(data)
         return story_funnel
                 
