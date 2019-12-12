@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-12-12 09:45:10
+@LastEditTime: 2019-12-12 10:49:27
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -9,9 +9,9 @@
 
 from mysetting import *
 from excel_api import WriteDataToExcel
+from excel_api import File
 from tutorials import GameTutorial
 import os
-from file import File
 import time
 from datetime import datetime
 
