@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-12-12 11:03:01
-@LastEditTime: 2019-12-12 12:16:25
+@LastEditTime: 2019-12-12 12:35:45
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -25,11 +25,20 @@ class StoryTutorial(object):
         return datas
 
     def combin_story_funnel(self, datas):
-        id = 1
+        id = 0
         current_questid = None
         story_funnel = []
         for data in datas:
-            pass
+            dialogid, questid, bi = data
+            if questid != 0 and questid != current_questid:
+                current_questid = questid
+                id += 1
+                story_funnel.append([id, questid, questid, bi])
+            id += 1
+            data.insert(0, id)
+            story_funnel.append(data)
+        return story_funnel
+                
 
 
 

@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-14 18:24:59
-@LastEditTime: 2019-12-12 11:36:50
+@LastEditTime: 2019-12-12 12:25:48
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -37,4 +37,5 @@ def test_file_function():
 def test_story_tutorial():
     s_tutorial = StoryTutorial(storytutorial_file)
     datas = s_tutorial.get_datas_from_file()
-    print(datas)
+    s = s_tutorial.combin_story_funnel(datas)
+    print(s)
