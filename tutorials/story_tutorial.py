@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-12-12 11:03:01
-@LastEditTime: 2019-12-12 14:19:19
+@LastEditTime: 2019-12-12 14:26:25
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -28,6 +28,7 @@ class StoryTutorial(object):
         id = 0
         current_questid = None
         story_funnel = []
+        story_funnel.append(['id', 'storyid', 'questid', 'bi', 'status'])
         for ix, data in enumerate(datas):
             _, questid, bi = data
             if questid != 0 and questid != current_questid:
