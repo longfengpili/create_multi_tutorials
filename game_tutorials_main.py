@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-12-12 10:49:27
+@LastEditTime: 2019-12-12 10:57:40
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -54,18 +54,25 @@ def write_data_to_excel(tutorial_output_path, datas):
     write_data_to_excel = WriteDataToExcel(tutorial_output_path)
     write_data_to_excel.write_sheets(datas)
     for sheetname in datas:
-        write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$D1="well_done"')
-        write_data_to_excel.write_cell(sheetname, "K1", 'is_check')
-        write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$K1=1', bg_color='#00b8ff')
+        if sheetname == 'adjust_tokes':
+            write_data_to_excel.write_cell(sheetname, "C1", 'is_check')
+            write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:C10000', '=$C1=1', bg_color='#00b8ff')
+        else:
+            write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:J10000', '=$D1="well_done"')
+            write_data_to_excel.write_cell(sheetname, "K1", 'is_check')
+            write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$K1=1', bg_color='#00b8ff')
     write_data_to_excel.close()
 
 
-if __name__ == '__main__':
+def writemain(tutorial_path, tutorial_map, tutorial_config_path, tutorial_output_path='./output'):
     filename = datetime.now().strftime('%Y%m%d')
     tutorial_output_path = os.path.join(tutorial_output_path, f'{filename}gametutorial.xlsx')
     file = File(tutorial_output_path)
     file.close_file()
     time.sleep(2)
-    datas = get_datas(project_tutorial_path, tutorial_map, tutorial_config_path)
+    datas = get_datas(tutorial_path, tutorial_map, tutorial_config_path)
     write_data_to_excel(tutorial_output_path, datas)
     file.open_file()
+
+if __name__ == '__main__':
+    writemain(tutorial_path, tutorial_map, tutorial_config_path)
