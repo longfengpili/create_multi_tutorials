@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-12-12 11:03:01
-@LastEditTime: 2019-12-12 14:26:25
+@LastEditTime: 2019-12-12 14:35:17
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -25,6 +25,7 @@ class StoryTutorial(object):
         return datas
 
     def combin_story_funnel(self, datas):
+        funnel_datas = {}
         id = 0
         current_questid = None
         story_funnel = []
@@ -42,8 +43,10 @@ class StoryTutorial(object):
             data.insert(0, id)
             data.append('start')
             story_funnel.append(data)
-        return story_funnel
-                
+        funnel_datas['story_funnel'] = story_funnel
+        funnel_datas['quest_funnel'] = [step for step in story_funnel if step[1] == step[2]]
+        return funnel_datas
+
 
 
 
