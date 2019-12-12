@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-12-12 14:10:04
+@LastEditTime: 2019-12-12 14:40:30
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -26,13 +26,9 @@ def write_data_to_excel(tutorial_output_path, datas):
     write_data_to_excel = WriteDataToExcel(tutorial_output_path)
     write_data_to_excel.write_sheets(datas)
     for sheetname in datas:
-        if sheetname == 'adjust_tokes':
-            write_data_to_excel.write_cell(sheetname, "C1", 'is_check')
-            write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:C10000', '=$C1=1', bg_color='#00b8ff')
-        else:
-            write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:J10000', '=$D1="well_done"')
-            write_data_to_excel.write_cell(sheetname, "K1", 'is_check')
-            write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$K1=1', bg_color='#00b8ff')
+        write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:J10000', '=$D1="well_done"')
+        write_data_to_excel.write_cell(sheetname, "K1", 'is_check')
+        write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$K1=1', bg_color='#00b8ff')
     write_data_to_excel.close()
 
 
