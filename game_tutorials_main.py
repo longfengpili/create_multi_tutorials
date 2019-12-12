@@ -1,15 +1,15 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-12-11 17:17:55
+@LastEditTime: 2019-12-12 09:45:10
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
 #-*- coding:utf-8 -*-
 
 from mysetting import *
-from to_excel import WriteDataToExcel
-from parse_tutorial import ParseTutorial
+from excel_api import WriteDataToExcel
+from tutorials import GameTutorial
 import os
 from file import File
 import time
@@ -17,7 +17,7 @@ from datetime import datetime
 
 
 def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
-    parse_tutorial = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
+    parse_tutorial = GameTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
     mul_tutorial_files = parse_tutorial.get_tutorial_files()
 
     datas = {}
@@ -55,14 +55,14 @@ def write_data_to_excel(tutorial_output_path, datas):
     write_data_to_excel.write_sheets(datas)
     for sheetname in datas:
         write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$D1="well_done"')
-        write_data_to_excel.write_cell(sheetname, "J1", 'is_check')
-        write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$J1=1', bg_color='#00b8ff')
+        write_data_to_excel.write_cell(sheetname, "K1", 'is_check')
+        write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:I10000', '=$K1=1', bg_color='#00b8ff')
     write_data_to_excel.close()
 
 
 if __name__ == '__main__':
     filename = datetime.now().strftime('%Y%m%d')
-    tutorial_output_path = os.path.join(tutorial_output_path, f'{filename}tutorial.xlsx')
+    tutorial_output_path = os.path.join(tutorial_output_path, f'{filename}gametutorial.xlsx')
     file = File(tutorial_output_path)
     file.close_file()
     time.sleep(2)

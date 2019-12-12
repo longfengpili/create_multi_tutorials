@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-12-11 18:08:30
+@LastEditTime: 2019-12-11 20:18:51
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -12,9 +12,9 @@ import os
 from bs4 import BeautifulSoup
 import xlrd
 import re
-from to_excel import WriteDataToExcel
+from excel_api import WriteDataToExcel
 
-class ParseTutorial(object):
+class GameTutorial(object):
     '''[summary]
     
     [description]
@@ -53,11 +53,11 @@ class ParseTutorial(object):
             tutorial_levels = dict([(k, v) for k, v in tutorial_levels.items() if not isinstance(v, str)])
             for elem, level in tutorial_levels.items():
                 if xml == 'AB0.xml':
-                    file = [file for file in all_files if file.endswith('.xml') and f'level{int(level)}' in file and 'AB' not in file]
+                    file = [file for file in all_files if file.endswith('.xml') and re.search(f'level{int(level)}(?!\d)', file) and 'AB' not in file]
                 else:
                     file1 = [file for file in all_files if file.endswith('.xml') and re.search(f'level{int(level)}(?!\d)', file) and xml in file]
-                    file2 = [file for file in all_files if file.endswith('.xml') and f'level{int(level)}' in file]
-                    file = file1 if file1 else file2 if file2 else []
+                    file2 = [file for file in all_files if file.endswith('.xml') and re.search(f'level{int(level)}(?!\d)', file)]
+                    file = file1 if file1 else file2
                 if file:
                     file = file[0]
                     mul_tutorial_files.setdefault(tutorial_name, [])
@@ -248,18 +248,18 @@ class ParseTutorial(object):
         tutorials_t.extend(story_tutorials)
         tutorials_t.extend(levelstep_tutorials)
         
-        # tutorials_token = self.get_tutorial_adjust_token(adjust_sheet='adjust_funnel')
-        # for tutorial in tutorials_t:
-        #     step_name = tutorial.get('step_name', '')
-        #     step_token = tutorials_token.get(step_name, '')
-        #     tutorial['adjust_token'] = step_token
-        #     tutorials.append(tutorial)
+        tutorials_token = self.get_tutorial_adjust_token(adjust_sheet='adjust_funnel')
+        for tutorial in tutorials_t:
+            step_name = tutorial.get('step_name', '')
+            step_token = tutorials_token.get(step_name, '')
+            tutorial['adjust_token'] = step_token
+            tutorials.append(tutorial)
 
-        tutorials = sorted(tutorials_t, key=lambda x: (x.get('level_step'), x.get('step')))
+        tutorials = sorted(tutorials, key=lambda x: (x.get('level_step'), x.get('step')))
         return tutorials
 
 if __name__ == "__main__":
-    pt = ParseTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
+    pt = GameTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
     mul_tutorial_files = pt.get_tutorial_files()
     # print(mul_tutorial_files)
     for tutorial_name, tutorial_files in mul_tutorial_files.items():
