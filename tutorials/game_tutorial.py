@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-12-11 20:18:51
+@LastEditTime: 2019-12-12 15:11:28
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -35,10 +35,11 @@ class GameTutorial(object):
         tutorial_config_path ｛str｝-- tutorial_config_path文件地址
     '''
     
-    def __init__(self, tutorial_path, tutorial_map, tutorial_config_path):
+    def __init__(self, tutorial_path, tutorial_map, tutorial_config_path, game_version):
         self.tutorial_path = tutorial_path
         self.tutorial_map = tutorial_map
         self.tutorial_config_path = tutorial_config_path
+        self.game_version = game_version
 
     def get_tutorial_files(self):
         '''
@@ -144,6 +145,7 @@ class GameTutorial(object):
             for soup_ in soup.find_all('steps'):
                 tutorial = {}
                 tutorial['tutorial_file'] = tutorial_file
+                tutorial['game_version'] = self.game_version
                 tutorial['level_group'] = id
                 tutorial['step'] = int(soup_.get('move', 0))
                 tutorial['step_name_ori'] = soup_.get('step_name', '')
@@ -200,6 +202,7 @@ class GameTutorial(object):
                 level, step = v.split('-', 1)
                 tutorial = {}
                 tutorial['tutorial_file'] = ''
+                tutorial['game_version'] = self.game_version
                 tutorial['level_group'] = ''
                 tutorial['step'] = int(step)
                 tutorial['step_name_ori'] = k.split('.')[0]
@@ -223,6 +226,7 @@ class GameTutorial(object):
             for step in level_steps:
                 tutorial = {}
                 tutorial['tutorial_file'] = ''
+                tutorial['game_version'] = self.game_version
                 tutorial['level_group'] = ''
                 tutorial['step'] = 0
                 tutorial['step_name_ori'] = step
@@ -258,13 +262,7 @@ class GameTutorial(object):
         tutorials = sorted(tutorials, key=lambda x: (x.get('level_step'), x.get('step')))
         return tutorials
 
-if __name__ == "__main__":
-    pt = GameTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
-    mul_tutorial_files = pt.get_tutorial_files()
-    # print(mul_tutorial_files)
-    for tutorial_name, tutorial_files in mul_tutorial_files.items():
-        tutorials = pt.get_tutorials(tutorial_name, tutorial_files)
-        print(tutorials[:10])
+
 
 
 
