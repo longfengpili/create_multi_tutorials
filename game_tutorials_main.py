@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime: 2019-12-12 10:57:40
+@LastEditTime: 2019-12-12 14:05:42
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -16,8 +16,8 @@ import time
 from datetime import datetime
 
 
-def get_datas(project_tutorial_path, tutorial_map, tutorial_config_path):
-    parse_tutorial = GameTutorial(project_tutorial_path, tutorial_map, tutorial_config_path)
+def get_datas(gametutorial_path, gametutorial_map, gametutorial_config_path):
+    parse_tutorial = GameTutorial(gametutorial_path, gametutorial_map, gametutorial_config_path)
     mul_tutorial_files = parse_tutorial.get_tutorial_files()
 
     datas = {}
@@ -64,15 +64,15 @@ def write_data_to_excel(tutorial_output_path, datas):
     write_data_to_excel.close()
 
 
-def writemain(tutorial_path, tutorial_map, tutorial_config_path, tutorial_output_path='./output'):
+def game_write_main(gametutorial_path, gametutorial_map, gametutorial_config_path, gametutorial_output_path='./output'):
     filename = datetime.now().strftime('%Y%m%d')
-    tutorial_output_path = os.path.join(tutorial_output_path, f'{filename}gametutorial.xlsx')
+    tutorial_output_path = os.path.join(gametutorial_output_path, f'{filename}gametutorial.xlsx')
     file = File(tutorial_output_path)
     file.close_file()
     time.sleep(2)
-    datas = get_datas(tutorial_path, tutorial_map, tutorial_config_path)
+    datas = get_datas(gametutorial_path, gametutorial_map, gametutorial_config_path)
     write_data_to_excel(tutorial_output_path, datas)
     file.open_file()
 
 if __name__ == '__main__':
-    writemain(tutorial_path, tutorial_map, tutorial_config_path)
+    game_write_main(gametutorial_path, gametutorial_map, gametutorial_config_path)
