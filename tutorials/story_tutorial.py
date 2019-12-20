@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-12-12 11:03:01
-@LastEditTime : 2019-12-20 15:52:59
+@LastEditTime : 2019-12-20 16:48:03
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -50,17 +50,31 @@ class StoryTutorial(object):
         for ix, data in enumerate(datas):
             data = data.copy()
             dialogid, questid, bi = data
+            
             if dialogid == 0: # 当前任务没有对话
-                story_single_two = self.combin_story_id_single_two(questid, questid, bi)
-                story_funnel.extend(story_single_two)
-            elif questid == 0 and not current_questid:
+                if current_questid and questid != current_questid and current_questid != 'gift':
+                    story_single = self.combin_story_id_single(current_questid, current_questid, bi, 'end') # 结束上一个任务
+                    story_funnel.append(story_single)
+                    current_questid = questid
+                story_single = self.combin_story_id_single(questid, questid, bi, 'start')
+                story_funnel.append(story_single)
+            elif questid == 0:
+                if current_questid:
+                    story_single = self.combin_story_id_single(current_questid, current_questid, bi, 'end') # 结束上一个任务
+                    story_funnel.append(story_single)
+                    current_questid = questid
                 story_single_two = self.combin_story_id_single_two(dialogid, '', bi)
                 story_funnel.extend(story_single_two)
             elif questid == -1: # 当前是gift
-                story_single_two = self.combin_story_id_single_two(dialogid, 'gift', bi)
+                if current_questid and current_questid != 'gift':
+                    story_single = self.combin_story_id_single(current_questid, current_questid, bi, 'end') # 结束上一个任务
+                    story_funnel.append(story_single)
+                    current_questid = questid
+                current_questid = 'gift'
+                story_single_two = self.combin_story_id_single_two(dialogid, current_questid, bi)
                 story_funnel.extend(story_single_two)
             elif questid > 0 and questid != current_questid: # 开始新的quest
-                if current_questid:
+                if current_questid and current_questid != 'gift':
                     story_single = self.combin_story_id_single(current_questid, current_questid, bi, 'end') # 结束上一个任务
                     story_funnel.append(story_single)
                 current_questid = questid #更新questid
