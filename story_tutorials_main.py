@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 16:04:28
-@LastEditTime : 2019-12-20 16:24:08
+@LastEditTime : 2019-12-23 12:20:06
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -27,6 +27,7 @@ def write_data_to_excel(tutorial_output_path, datas):
     write_data_to_excel.write_sheets(datas)
     for sheetname in datas:
         write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:F10000', '=AND($F1="end", LEN($C1) < 8)')
+        write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:F10000', '=AND($F1="start", LEN($C1) < 8)', bg_color='green')
         write_data_to_excel.write_cell(sheetname, "G1", 'is_check')
         write_data_to_excel.set_sheet_formula_conditional(sheetname, 'A1:F10000', '=$G1=1', bg_color='#00b8ff')
     write_data_to_excel.close()
