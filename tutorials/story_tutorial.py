@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-12-12 11:03:01
-@LastEditTime : 2019-12-23 12:26:41
+@LastEditTime : 2019-12-23 13:13:49
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -57,7 +57,7 @@ class StoryTutorial(object):
                 story_single = self.combin_story_id_single(current_questid, current_questid, bi, 'end') # 结束任务
                 story_funnel.append(story_single)
             # 新任务，开始任务
-            if dialogid == 0 or (current_questid != questid and current_questid and questid != 'gift'):
+            if dialogid == 0 or (current_questid != questid and questid and questid != 'gift'):
                 current_questid = questid
                 story_single = self.combin_story_id_single(current_questid, current_questid, bi, 'start') # 开始任务
                 story_funnel.append(story_single)
