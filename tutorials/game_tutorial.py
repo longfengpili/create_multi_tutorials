@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime: 2019-12-12 15:11:28
+@LastEditTime : 2019-12-23 15:24:35
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -216,7 +216,7 @@ class GameTutorial(object):
                 story_tutorials.append(tutorial)
         return story_tutorials
 
-    def get_levelstep_tutorial_info(self, levels, max_level=100):
+    def get_levelstep_tutorial_info(self, levels, max_level=120):
         levels = set(list(range(max_level+1)) + levels)
         levels = [level for level in levels if level > 0]
         level_steps = {'enter_level': 0.0, 'start_level': 0.2,
