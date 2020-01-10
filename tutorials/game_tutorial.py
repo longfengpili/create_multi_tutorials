@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime : 2019-12-23 15:24:35
+@LastEditTime : 2020-01-10 11:52:55
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -99,7 +99,7 @@ class GameTutorial(object):
                     elem_counts = [col_values.count(elem) for elem in set(col_values) if elem]
                     if max(elem_counts) >= 2: #检查是否有重复的
                         elems = [elem for elem in set(col_values) if col_values.count(elem) >= 2]
-                        raise ValueError(f"mutiple elem {','.join(elems)}")
+                        raise ValueError(f"【{tutorial_name}】please check config, mutiple elem {','.join(elems)}")
                     else:
                         temp = dict(zip(col_values[1:], col_level[1:]))
                         tutorial_levels_temp.update(temp)
@@ -140,7 +140,7 @@ class GameTutorial(object):
             soup = BeautifulSoup(html, 'lxml')
             if soup.pbtutorial:
                 id = soup.pbtutorial.get('id')
-                result = re.search('(?<=level)(\d+)', id)
+                result = re.search('(\d+)', id)
                 level = float(result.group()) if result else None
             for soup_ in soup.find_all('steps'):
                 tutorial = {}
