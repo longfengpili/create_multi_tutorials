@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime : 2020-01-10 11:52:55
+@LastEditTime : 2020-01-10 12:18:37
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -140,7 +140,8 @@ class GameTutorial(object):
             soup = BeautifulSoup(html, 'lxml')
             if soup.pbtutorial:
                 id = soup.pbtutorial.get('id')
-                result = re.search('(\d+)', id)
+                result = re.match('(\d+)', id)
+                # print(f"【{tutorial_file}】{result}")
                 level = float(result.group()) if result else None
             for soup_ in soup.find_all('steps'):
                 tutorial = {}

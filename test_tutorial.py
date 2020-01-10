@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-14 18:24:59
-@LastEditTime: 2019-12-12 12:25:48
+@LastEditTime : 2020-01-10 12:10:42
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -16,15 +16,15 @@ import time
 
 @pytest.mark.skip()
 def test_parse():
-    pt = GameTutorial(gametutorial_path, gametutorial_map, gametutorial_config_path)
+    pt = GameTutorial(gametutorial_path, gametutorial_map, gametutorial_config_path, game_version='test')
     tutorial_files = pt.get_tutorial_adjust_id()
     print(tutorial_files)
 
-@pytest.mark.skip()
+
 def test_parse2():
-    pt = GameTutorial(gametutorial_path, gametutorial_map, gametutorial_config_path)
-    tutorial_files = pt.get_tutorial_files()
-    print(tutorial_files)
+    pt = GameTutorial(gametutorial_path, gametutorial_map, gametutorial_config_path, game_version='test')
+    tutorial_levels = pt.get_tutorial_level_info(tutorial_name='【0】对照组(202001)')
+    print(tutorial_levels)
 
 @pytest.mark.skip()
 def test_file_function():
@@ -34,8 +34,9 @@ def test_file_function():
     # file.close_file()
     # file.del_file()
 
+@pytest.mark.skip()
 def test_story_tutorial():
-    s_tutorial = StoryTutorial(storytutorial_file)
+    s_tutorial = StoryTutorial(storytutorial_file, game_version='test')
     datas = s_tutorial.get_datas_from_file()
     s = s_tutorial.combin_story_funnel(datas)
     print(s)
