@@ -70,7 +70,7 @@ def game_write_main(gametutorial_path, gametutorial_map, gametutorial_config_pat
     file = File(tutorial_output_path)
     file.close_file()
     time.sleep(2)
-    datas = get_datas(gametutorial_path, gametutorial_map, gametutorial_config_path, game_version) 
+    datas = get_datas(gametutorial_path, gametutorial_map, gametutorial_config_path, game_version)
     write_data_to_excel(tutorial_output_path, datas)
     file.open_file()
 

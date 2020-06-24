@@ -1,7 +1,7 @@
 '''
 @Author: longfengpili
 @Date: 2019-11-13 11:35:31
-@LastEditTime : 2020-01-10 12:18:37
+@LastEditTime : 2020-02-24 16:22:33
 @github: https://github.com/longfengpili
 '''
 #!/usr/bin/env python3
@@ -16,7 +16,7 @@ from excel_api import WriteDataToExcel
 
 class GameTutorial(object):
     '''[summary]
-    
+
     [description]
         1. level_step 设定，为了排序
             + enter_level 1.0
@@ -25,7 +25,7 @@ class GameTutorial(object):
             + 关内引导 1.3
             + level_completed 1.4
             + well_done 1.5
-            + 关后剧情 
+            + 关后剧情
         2. especial文档
             + level_tutorials 只是为了获取关前道具关卡
             + story_tutorials 是需要加入的其他关卡外漏斗（具体序号需要符合第一部分）
@@ -34,7 +34,7 @@ class GameTutorial(object):
         tutorial_map {dict} -- 文件分类与especial中对应的列名
         tutorial_config_path ｛str｝-- tutorial_config_path文件地址
     '''
-    
+
     def __init__(self, tutorial_path, tutorial_map, tutorial_config_path, game_version):
         self.tutorial_path = tutorial_path
         self.tutorial_map = tutorial_map
@@ -78,9 +78,9 @@ class GameTutorial(object):
     def get_tutorial_level_info(self, tutorial_name):
         '''
         @description: 根据tutorial_name获取especial中的内容
-        @param {type} 
+        @param {type}
         【tutorial_name {str}】：对应ab组的name
-        @return: 
+        @return:
         【tutorial_levels {dict}】：返回对应的各项道具、各种非关卡内引导的数据
         '''
         tutorial_names = [tutorial_name, 'all'] # 'all'是公共部分的对应数据
@@ -103,8 +103,10 @@ class GameTutorial(object):
                     else:
                         temp = dict(zip(col_values[1:], col_level[1:]))
                         tutorial_levels_temp.update(temp)
-        tutorial_levels_temp.pop('')
-        
+        # print(tutorial_levels_temp)
+        if '' in tutorial_levels_temp:
+            tutorial_levels_temp.pop('')
+
         for k, v in tutorial_levels_temp.items(): #key中的大写全部转成小写
             k = k.lower() if isinstance(k, str) else f'{int(k)}' if isinstance(k, int) or isinstance(k, float) else k
             tutorial_levels[k] = v
@@ -126,10 +128,10 @@ class GameTutorial(object):
     def get_tutorial_info_single(self, tutorial_file, tutorial_levels):
         '''
         @description: 获取单个文件的漏斗信息
-        @param {type} 
+        @param {type}
         【tutorial_file {str}】：文件路径
         【tutorial_levels {dict}】：特别配置的信息
-        @return: 
+        @return:
         【level {int}】：关卡号
         【file_tutorial {list}】：多步漏斗数据，每步是一个字典
         '''
@@ -188,14 +190,14 @@ class GameTutorial(object):
             level, file_tutorial = self.get_tutorial_info_single(tutorial_file, tutorial_levels)
             levels.append(level)
             inlevel_tutorials.extend(file_tutorial)
-    
+
         return levels, inlevel_tutorials
-    
+
     def get_story_tutorial_info(self, tutorial_levels):
         '''
         @description: 生成关卡外剧情的漏斗数据
-        @param {type} 
-        @return: 
+        @param {type}
+        @return:
         '''
         story_tutorials = []
         for k, v in tutorial_levels.items():
@@ -217,7 +219,7 @@ class GameTutorial(object):
                 story_tutorials.append(tutorial)
         return story_tutorials
 
-    def get_levelstep_tutorial_info(self, levels, max_level=120):
+    def get_levelstep_tutorial_info(self, levels, max_level=MAXLEVEL):
         levels = set(list(range(max_level+1)) + levels)
         levels = [level for level in levels if level > 0]
         level_steps = {'enter_level': 0.0, 'start_level': 0.2,
@@ -252,7 +254,7 @@ class GameTutorial(object):
         tutorials_t.extend(inlevel_tutorials)
         tutorials_t.extend(story_tutorials)
         tutorials_t.extend(levelstep_tutorials)
-        
+
         tutorials_token = self.get_tutorial_adjust_token(adjust_sheet='adjust_funnel')
         for tutorial in tutorials_t:
             step_name = tutorial.get('step_name', '')
