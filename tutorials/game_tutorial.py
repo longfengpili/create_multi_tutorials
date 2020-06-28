@@ -103,6 +103,7 @@ class GameTutorial(object):
                     else:
                         temp = dict(zip(col_values[1:], col_level[1:]))
                         tutorial_levels_temp.update(temp)
+
         # print(tutorial_levels_temp)
         if '' in tutorial_levels_temp:
             tutorial_levels_temp.pop('')
