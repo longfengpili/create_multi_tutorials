@@ -14,10 +14,10 @@ import pytest
 from excel_api import File
 import time
 
-@pytest.mark.skip()
-def test_parse():
+
+def test_gametutorial():
     pt = GameTutorial(gametutorial_path, gametutorial_map, gametutorial_config_path, game_version='test')
-    tutorial_files = pt.get_tutorial_adjust_id()
+    tutorial_files = pt.get_tutorial_files()
     print(tutorial_files)
 
 

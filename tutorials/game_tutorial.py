@@ -71,8 +71,6 @@ class GameTutorial(object):
 
         for tutorial_name in mul_tutorial_files:
             mul_tutorial_files.get(tutorial_name).extend(non_level_files)
-        # print(mul_tutorial_files)
-        # sys.exit(0)
         return mul_tutorial_files
 
     def get_tutorial_level_info(self, tutorial_name):
