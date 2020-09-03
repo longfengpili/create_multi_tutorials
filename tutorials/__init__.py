@@ -9,6 +9,6 @@
 
 
 from .game_tutorial import GameTutorial
-from .story_tutorial import StoryTutorial
+from .quest_tutorial import QuestTutorial
 
-__all__ = ['GameTutorial', 'StoryTutorial']
+__all__ = ['GameTutorial', 'QuestTutorial']

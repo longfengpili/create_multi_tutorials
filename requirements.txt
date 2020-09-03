@@ -2,3 +2,4 @@ bs4
 xlrd
 xlsxwriter
 numpy
+graphviz
