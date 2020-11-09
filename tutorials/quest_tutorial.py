@@ -18,7 +18,7 @@ class QuestTutorial(object):
     def __init__(self, quest_file, game_version):
         self.quest_file = quest_file
         self.game_version = game_version
-        self.sheetname = 'Quest'
+        self.sheetname = 'Quest_AB0'
         self.columns = ['id', 'PreQuestIds']
 
     def get_quests_from_file(self):

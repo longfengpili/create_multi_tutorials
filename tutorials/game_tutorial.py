@@ -4,15 +4,15 @@
 @LastEditTime : 2020-02-24 16:22:33
 @github: https://github.com/longfengpili
 '''
-#!/usr/bin/env python3
-#-*- coding:utf-8 -*-
+# !/usr/bin/env python3
+# -*- coding:utf-8 -*-
 
 from mysetting import *
 import os
 from bs4 import BeautifulSoup
 import xlrd
 import re
-from excel_api import WriteDataToExcel
+
 
 class GameTutorial(object):
     '''[summary]
@@ -46,7 +46,7 @@ class GameTutorial(object):
         @description: 获取tutorial文件并分组
         '''
         mul_tutorial_files = {}
-        non_level_files = [] #公共部分
+        non_level_files = []  # 公共部分
 
         all_files = os.listdir(self.tutorial_path)
         for xml, tutorial_name in self.tutorial_map.items():
@@ -81,7 +81,7 @@ class GameTutorial(object):
         @return:
         【tutorial_levels {dict}】：返回对应的各项道具、各种非关卡内引导的数据
         '''
-        tutorial_names = [tutorial_name, 'all'] # 'all'是公共部分的对应数据
+        tutorial_names = [tutorial_name, 'all']  # 'all'是公共部分的对应数据
         with xlrd.open_workbook(self.tutorial_config_path) as wb:
             sheets_name = wb.sheet_names()
         sheets_name = [sheet_name for sheet_name in sheets_name if not sheet_name.startswith('_')]
@@ -89,13 +89,13 @@ class GameTutorial(object):
         tutorial_levels_temp = {}
         for sheet_name in sheets_name:
             sheet = wb.sheet_by_name(sheet_name)
-            col_level = sheet.col_values(0) #获取level列
-            sheet_columns = sheet.row_values(0) #获取表头
+            col_level = sheet.col_values(0)  # 获取level列
+            sheet_columns = sheet.row_values(0)  # 获取表头
             for tutorial_name in tutorial_names:
                 if tutorial_name in sheet_columns:
-                    col_values = sheet.col_values(sheet_columns.index(tutorial_name)) #获取对应的列的数据
+                    col_values = sheet.col_values(sheet_columns.index(tutorial_name))  # 获取对应的列的数据
                     elem_counts = [col_values.count(elem) for elem in set(col_values) if elem]
-                    if max(elem_counts) >= 2: #检查是否有重复的
+                    if max(elem_counts) >= 2:  # 检查是否有重复的
                         elems = [elem for elem in set(col_values) if col_values.count(elem) >= 2]
                         raise ValueError(f"【{tutorial_name}】please check config, mutiple elem {','.join(elems)}")
                     else:
@@ -106,7 +106,7 @@ class GameTutorial(object):
         if '' in tutorial_levels_temp:
             tutorial_levels_temp.pop('')
 
-        for k, v in tutorial_levels_temp.items(): #key中的大写全部转成小写
+        for k, v in tutorial_levels_temp.items():  # key中的大写全部转成小写
             k = k.lower() if isinstance(k, str) else f'{int(k)}' if isinstance(k, int) or isinstance(k, float) else k
             tutorial_levels[k] = v
         return tutorial_levels
@@ -154,11 +154,11 @@ class GameTutorial(object):
                 tutorial['step_des'] = soup_.get('step_des', '')
                 # tutorial['adjust_token'] = None  # 占位
                 tutorial['step_name'] = tutorial['step_name_ori'] + '_s'
-                tutorial['level'] = None #占位
+                tutorial['level'] = None  # 占位
 
                 if level:
                     tutorial['level_step'] = level + 0.3
-                elif 'selectBooster' in tutorial_file: #关前道具没有配置关卡号
+                elif 'selectBooster' in tutorial_file:  # 关前道具没有配置关卡号
                     t_ = tutorial['step_name_ori'].split('_learning')[0]
                     level = tutorial_levels.get(t_.lower(), 0) + 0.1
                     tutorial['level_step'] = level
@@ -222,7 +222,7 @@ class GameTutorial(object):
         levels = set(list(range(max_level+1)) + levels)
         levels = [level for level in levels if level > 0]
         level_steps = {'enter_level': 0.0, 'start_level': 0.2,
-                    'level_completed': 0.4, 'well_done': 0.5}
+                       'level_completed': 0.4, 'well_done': 0.5}
         levelstep_tutorials = []
         for lv in levels:
             for step in level_steps:
@@ -235,7 +235,7 @@ class GameTutorial(object):
                 tutorial['step_des'] = ''
                 # tutorial['adjust_token'] = None  # 占位
                 tutorial['step_name'] = step
-                tutorial['level'] = None #占位
+                tutorial['level'] = None  # 占位
                 tutorial['level_step'] = lv + level_steps[step]
                 tutorial['level'] = int(tutorial['level_step'])
                 tutorial['step_text'] = ''
@@ -263,9 +263,3 @@ class GameTutorial(object):
 
         tutorials = sorted(tutorials, key=lambda x: (x.get('level_step'), x.get('step')))
         return tutorials
-
-
-
-
-
-

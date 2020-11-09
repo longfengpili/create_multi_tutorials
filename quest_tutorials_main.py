@@ -21,7 +21,7 @@ def quest_tutorial_main(quest_file, game_version, q_start, q_end):
     qt = QuestTutorial(quest_file, game_version)
     quests_d, quests_l = qt.get_quests_from_file()
     longpath = qt.find_long_questpath(quests_d, start=q_end, end=q_start)
-    print(longpath)
+    print(f"longpath: {longpath[::-1]}")
     qt.save_questpath(quests_l)
 
 if __name__ == '__main__':
